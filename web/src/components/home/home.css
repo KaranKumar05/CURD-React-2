@@ -1,0 +1,115 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+/* POst Form CSS  */
+.postForm{
+    border-bottom: 2px solid rgba(235, 4, 235, 0.877);
+    display: flex;
+    padding: 1em 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    z-index: 100;
+    background: linear-gradient(to bottom, purple, white);
+}
+.postForm input,
+.postForm textarea{
+    padding: 10px;
+    width: 70%;
+    background: rgba(0, 0, 0, 0.272);
+    border: none;
+    border-radius: 5px;
+    color: white;
+}
+.postForm input::placeholder,
+.postForm textarea::placeholder{
+    color: white;
+}
+.postForm > div{
+    width: 70%;
+    margin: auto;
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    color: white;
+}
+.postForm > div button{
+    padding: 10px;
+    color: white;
+    background-color: rgb(13, 13, 80);
+    border: none;
+    border-radius: 5px;
+}
+.postForm > div span{
+    color: black;
+    border-bottom: 2px solid black;
+}
+
+
+/* Post Card CSS  */
+.postCard{
+    border: 1px solid black;
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 5px 0 20px rgb(217, 213, 213);
+    width: 50em;
+    margin: auto;
+    display: flex;
+    gap: 5px;
+    margin-bottom: 50px;
+    flex-direction: column;   
+}
+.postCard h2{
+    border-bottom: 1px solid black;
+}
+.postCard p{
+    border-bottom: 1px solid black;
+}
+
+.postCard div{
+    display: flex;
+    gap: 10px;
+}
+.postCard div button{
+    padding: 10px;
+    border: none;
+    background-color: blue;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+}
+@media (max-width:860px) {
+    .postCard{
+        width: 90%;
+    }
+    
+}
+
+/* Bottom Button CSS  */
+.topButton{
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    position: fixed;
+    /* top: -5em; */
+}
+
+
+@media (max-width:600px) {
+    .postForm input,
+    .postForm textarea{
+        width: 90%;
+    }
+    .postForm > div{
+        width: 90%;
+    }
+}
+
+
+
