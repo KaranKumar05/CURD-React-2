@@ -2,9 +2,11 @@ import express from 'express'
 import { client } from './../mongoDb.mjs'
 // Importing objectid form mongo database
 import { ObjectId } from 'mongodb'
-
 import { customAlphabet } from 'nanoid'; //Generates Random ID
 const nanoid = customAlphabet('1234567890abcdefghijklmnopqrstuvwxyz', 10); // Customize ID  
+// Pinecone OpenAi 
+import pineconeClient, { openAi as OpenAiClient }
+    from './../pinecone.mjs';
 
 
 // name of Database 
@@ -35,14 +37,38 @@ router.post('/post', async (req, res, next) => {
 
     // inserting data to mongo Database / Creating new post 
     try {
-        const insertResponse = await col.insertOne({
-            title: req.body.title,
-            text: req.body.text,
-            createdOn: new Date()
-        });
-        console.log("insertResponse", insertResponse);
+        // const insertResponse = await col.insertOne({
+        //     title: req.body.title,
+        //     text: req.body.text,
+        //     createdOn: new Date()
+        // });
+        // console.log("insertResponse", insertResponse);
 
-        res.send({ message: 'Post Created'});
+        //-----Converting Data in Vector-----//
+        const response = await OpenAiClient.embeddings.create({
+            // model: 'text-davinci-002',
+            model: 'text-embedding-ada-002',
+            input: `${req.body, title} ${req.body.text}`
+        });
+        const vector = response?.data[0]?.embedding
+        console.log("vector", vector);
+
+        //----- Storing Data in pinecone Database -----// 
+        const index = pineconeClient.index(process.env.PINECONE_INDEX_NAME);
+
+        const upsertResponse = await index.upsert([{
+            id: nanoid(),
+            values: vector,
+            // metadata: {
+            //     title: req.body.title,
+            //     text: req.body.text,
+            //     createdOn: new Date().getTime()
+            // },
+        }]);
+        console.log("upsertResponse", upsertResponse);
+
+
+        res.send({ message: 'Post Created' });
     } catch (err) {
         console.log(err);
         res.status(500).send('Server Error please try again later');
@@ -53,8 +79,8 @@ router.post('/post', async (req, res, next) => {
 router.get('/posts', async (req, res, next) => {
     // -1 = descending, 1 = ascending order 
     const cursor = col.find({})
-    .sort({_id: -1})// sorting to show new post at top
-    .limit(100); // limiting the post to prevent form crashing or saving Ram and Cpu
+        .sort({ _id: -1 })// sorting to show new post at top
+        .limit(100); // limiting the post to prevent form crashing or saving Ram and Cpu
     try {
         let results = await cursor.toArray();
         console.log("results", results);
@@ -136,7 +162,7 @@ router.delete('/post/:postId', async (req, res, next) => {
         const deleteResponse = await col.deleteOne({ _id: new ObjectId(req.params.postId) })
         console.log("DeletedResponse: ", deleteResponse);
         // cheaking the count if deleting post for first time deletedCount is 1 or second time it will be 0
-        if(deleteResponse.deletedCount === 0){ // Send response to user to tell post was deleted previously
+        if (deleteResponse.deletedCount === 0) { // Send response to user to tell post was deleted previously
             res.send("Post Was Deleted");
             return
         }

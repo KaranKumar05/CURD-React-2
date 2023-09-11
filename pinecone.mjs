@@ -1,12 +1,11 @@
 
 // Vector Database libraries
-import { Pinecone } from '@pinecone/pinecone-js';
-import OpenAI from 'openai';
-
+import { Pinecone } from "@pinecone-database/pinecone";
+import OpenAI from "openai";
 
 // initialization OpenAi 
-const openAi = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
+export const openAi = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY, //Currently Don't Have
 });
 
 
@@ -16,4 +15,4 @@ const pinecone = new Pinecone({
     apiKey: process.env.PINECONE_API_KEY,
 });
 
-export default { openAi, pinecone };
+export default pinecone;
