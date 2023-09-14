@@ -54,6 +54,7 @@ const Home = () => {
       console.log(response.data);
       setAlert(response.data.message);
       setToggleRefresh(!toggleRefresh); //Toggle Refresh Button
+      e.target.reset() // Reset thr from one's post is published
     } catch (error) {
       console.log(error?.data);
       setIsLoading(false);
